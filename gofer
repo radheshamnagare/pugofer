@@ -1,0 +1,155 @@
+
+fact.0=1
+fact.(n)=n*fact.(n-1)
+
+facteach.[]=[]
+facteach.(x::xs)=fact.x::facteach.xs
+
+li:[Int]->Int
+li.([])=1
+li.(xl) =head.(xl)*li.(tail.(xl))
+
+rev'.([],l2)=l2
+rev'.(x::l1,l2) = rev'.(l1,x::l2)
+rev.l1 = rev'.(l1,[])
+
+
+trp.(x::xs,n) = row_to_col.(x,trp.(xs,n))
+trp.([],n) = h.(n)
+h.(0)=[]
+h.(n)=[]::h.(n-1)
+row_to_col.([],[])=[]
+row_to_col.(l::ls,m::ms)=(l::m)::row_to_col.(ls,ms)
+
+add.([],[])=[]
+add.(x1::l1,x2::l2)  = addn.(x1,x2)::add.(l1,l2)
+addn.([],[])=[]
+addn.(e1::x1,e2::x2) = e1+e2 ::addn.(x1,x2)
+
+fact2:Int->Int
+fact2.x
+ | x==0  = 1
+ | x>0   = x*fact2.(x-1)
+
+
+ispresent:(Int,[Int])->Bool
+ispresent.(e,[])=False
+ispresent.(e,x::xs)
+ | e==x     =True
+ |otherwise =ispresent.(e,xs)
+
+trp1:[[Int]]->[[Int]]
+col_to_row:[[Int]]->[Int]
+rest:[[Int]]->[[Int]]
+trp1.([]::xs)=[]
+trp1.(l)=col_to_row.(l)::trp1.(rest.(l))
+rest.([])=[]
+rest.(x::xs)=tail.(x)::rest.(xs)
+col_to_row.([])=[]
+col_to_row.(x::xs)=head.(x)::col_to_row.(xs)
+
+
+
+remv:([Int],Int)->[Int]
+remv.([],p)=[]
+remv.(x::xs,p)
+             |p==0  = remv.(xs,p-1)
+             |p>0   =x::remv.(xs,p-1)
+             |otherwise =x::remv.(xs,p)
+            
+
+insrt:([Int],Int,Int)->[Int]
+insrt.([],p,e)=[]
+insrt.(x::xs,p,e)
+ |len.(xs)<=p =reverse.(e::reverse.(x::xs))
+ |p==0 =e::x::xs
+ |p>0  =x::insrt.(xs,p-1,e)
+ |otherwise =e::xs
+
+len:[Int]->Int
+len.([])=0
+len.(x::xs)=1+len.(xs)
+
+
+replc:([Int],Int,Int)->[Int]
+replc.([],p,e)=[]
+replc.(x::xs,p,e)
+   |p==0 =e::xs
+   |p>0  =x::replc.(xs,p-1,e)
+   |p<0  =e::replc.(xs,p,e)
+
+multmat:([[Int]],[[Int]])->[[Int]]
+multmat.([],l2)=[]
+multmat.(e1::l1,l2)=add_ele.(mul.(e1,trp1.(l2)))::multmat.(l1,l2)
+mul.(l1,[])=[]
+mul.(l1,x::l2)=f.(l1,x)::mul.(l1,l2)
+f.([],[])=[]
+f.(e1::l1,e2::l2)=(e1*e2)::f.(l1,l2)
+add_ele.([])=[]
+add_ele.(x::xs)=sum.(x)::add_ele.(xs)
+
+
+comp.(-1)=[]
+comp.(x)=revs.(binary.(x)::comp.(x-1))
+binary.(x)
+     |x==0 =[0]
+     |x>0 =remd.(x)::binary.(x/2)
+     |otherwise =[]
+remd.(x)
+     | x==1 =1
+     | x>=2 =(x-(x/2)*2)
+revs.(x::xs)=(reverse.(x))::rev.(xs)
+
+find_conse:[[Int]]->[[Int]]
+find_conse.([])=[]
+find_conse.(x::xs)
+  |f4.(x)==False =x::find_conse.(xs)
+  |otherwise =find_conse.(xs)
+
+f4.([])=False
+f4.(x::xs)
+ | ((head.(x::xs)==1)&&(head.(xs)==1)==True) =True
+ | otherwise =f4.(xs)
+
+add_zero1:([[Int]],Int)->[[Int]]
+add_zero1.([],l)=[]
+add_zero1.(x::xs,l)=add_zero.(x,l)::add_zero1.(xs,l)
+add_zero.(l,x)
+ |length.(l)==x =l
+ |otherwise =add_zero.(0::l,x)
+
+f5.(x)=find_conse.(comp.(x))
+
+rem1.(n)
+ |n==1 =1
+ | n>=2 =(n-(n/2)*2)
+ |otherwise =0
+
+
+add_last.(xs,e)=reverse.(e::reverse.(xs))
+
+max1:(Int,[Int])->[Int]
+max1.(e,[])=[e]
+max1.(e,x::xs)
+ | e<x = max1.(x,xs)
+ |otherwise =max1.(e,xs)
+fd_max:[Int]->[Int]
+fd_max.(x::xs)=max1.(x,xs)
+
+seq.1=[1]
+seq.0=[0]
+seq.(n)
+ |even.(n)==True =(n)::seq.(n/2)
+ |otherwise =(n)::seq.((3*n+1))
+
+all_seq.(-1)=[]
+all_seq.(n)=seq.(n)::all_seq.(n-1)
+max_list:[[Int]]->[Int]
+max_list.(x::xs)=f_lst.(x,xs)
+f_lst:([Int],[[Int]])->[Int]
+f_lst.(e,[])=e
+f_lst.(e,x::xs)
+   | length.(x)>length.(e) =f_lst.(x,xs)
+   | otherwise =f_lst.(e,xs)
+get_max_list:Int->[Int]
+get_max_list.(x)=max_list.(all_seq.(x))
